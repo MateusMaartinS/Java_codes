@@ -32,11 +32,4 @@ public class EntityManagerUtil {
             System.out.println("Conexão fechada");
         }
     }
-    public static void main (String[] args){
-        try{
-            EntityManagerUtil.getEntityManagerFactory();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-    }
 }
