@@ -15,12 +15,15 @@ public class FrameCadastro extends javax.swing.JFrame {
     
     private DefaultTableModel modelo = new DefaultTableModel();
     
-    
+    private int linhaSelecionada = -1;
     
     
     public FrameCadastro() {
         initComponents();
+        setLocationRelativeTo(this);
         loadTable();
+        
+        
     }
 
     public void loadTable(){
@@ -48,6 +51,8 @@ public class FrameCadastro extends javax.swing.JFrame {
         TB_tabela = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         BT_salvar = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        BT_editar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,20 +179,41 @@ public class FrameCadastro extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        BT_editar.setText("Editar");
+        BT_editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BT_editarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BT_editar)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BT_editar)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -198,8 +224,10 @@ public class FrameCadastro extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -215,8 +243,8 @@ public class FrameCadastro extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -233,9 +261,16 @@ public class FrameCadastro extends javax.swing.JFrame {
     private void BT_salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_salvarActionPerformed
         String ra = TXF_ra.getText();
         String nome = TXF_nome.getText();
-        modelo.addRow(new Object[]{ra,nome});
         
-        JOptionPane.showMessageDialog(null, "Aluno Cadastrado!", "aviso", HEIGHT);
+        
+        if(linhaSelecionada >= 0){
+           modelo.removeRow(linhaSelecionada);
+           modelo.insertRow(linhaSelecionada, new Object[]{ra,nome});
+        }else{
+            modelo.addRow(new Object[]{ra,nome});
+        }
+        
+        JOptionPane.showMessageDialog(this, "Aluno " +nome+  " Cadastrado!", "aviso", HEIGHT);
         
         TXF_ra.setText("");
         TXF_nome.setText("");
@@ -243,8 +278,29 @@ public class FrameCadastro extends javax.swing.JFrame {
         TXF_ra.requestFocus();
     }//GEN-LAST:event_BT_salvarActionPerformed
 
+    private void BT_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_editarActionPerformed
+
+        linhaSelecionada = TB_tabela.getSelectedRow();
+        
+        if(linhaSelecionada >=0){
+            String ra = (String)TB_tabela.getValueAt(linhaSelecionada, 0);
+            String nome = (String)TB_tabela.getValueAt(linhaSelecionada, 1);
+            
+            TXF_ra.setText(ra);
+            TXF_nome.setText(nome);
+          
+        }else{
+            JOptionPane.showMessageDialog(this, "não há informação na linha selecionada!", "aviso", HEIGHT);
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_BT_editarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BT_editar;
     private javax.swing.JButton BT_salvar;
     private javax.swing.JTable TB_tabela;
     private javax.swing.JTextField TXF_nome;
@@ -255,6 +311,7 @@ public class FrameCadastro extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
