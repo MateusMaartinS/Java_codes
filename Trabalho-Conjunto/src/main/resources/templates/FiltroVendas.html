@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Venda</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .filtro {
+            margin-bottom: 20px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .filtro label {
+            margin-right: 10px;
+        }
+        .filtro input, .filtro button {
+            background-color: #333;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .filtro button {
+            background-color: #b71c1c;
+            border: none;
+            cursor: pointer;
+        }
+        .filtro button:hover {
+            background-color: #d32f2f;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #b71c1c;
+            color: #fff;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #333;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+        tbody tr:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+<div class="filtro">
+    <label for="data_inicio">Data de Início:</label>
+    <input type="date" id="data_inicio" name="data_inicio">
+    <label for="data_fim">Data de Fim:</label>
+    <input type="date" id="data_fim" name="data_fim">
+    <button onclick="filterTable()">Filtrar</button>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>OBSERVAÇÕES</th>
+        <th>DATA</th>
+        <th>TOTAL</th>
+    </tr>
+    </thead>
+    <tbody id="tabela_data">
+    </tbody>
+</table>
+
+<script>
+    async function fetchData() {
+        try {
+            const response = await fetch('http://localhost:8080/api/venda');
+            const data = await response.json();
+            populateTable(data);
+        } catch (error) {
+            console.error('Erro ao buscar dados:', error);
+        }
+    }
+
+    function populateTable(data) {
+        const tableBody = document.getElementById('tabela_data');
+        tableBody.innerHTML = '';
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.observacoes}</td>
+                    <td>${item.data}</td>
+                    <td>${item.total}</td>
+                `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function filterTable() {
+        const data_inicio = new Date(document.getElementById('data_inicio').value);
+        const data_fim = new Date(document.getElementById('data_fim').value);
+        const rows = document.querySelectorAll('#tabela_data tr');
+
+        rows.forEach(row => {
+            const dateStr = row.cells[2].textContent;
+            const dateParts = dateStr.split('-');
+            const date = new Date(dateParts[0], parseInt(dateParts[1]) - 1, dateParts[2]);
+            if ((data_inicio && date <= data_inicio) || (data_fim && date >= data_fim)) {
+                row.style.display = 'none';
+            } else {
+                row.style.display = '';
+            }
+        });
+    }
+    window.onload = fetchData;
+</script>
+</body>
+</html>
