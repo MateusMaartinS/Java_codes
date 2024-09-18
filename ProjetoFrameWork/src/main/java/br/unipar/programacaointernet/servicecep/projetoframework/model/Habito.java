@@ -2,8 +2,6 @@ package br.unipar.programacaointernet.servicecep.projetoframework.model;
 
 import jakarta.persistence.*;
 
-
-
 @Entity
 public class Habito {
 
@@ -13,7 +11,7 @@ public class Habito {
 
     private String descricao;
 
-
+    // Getter e Setter para id
     public Integer getId() {
         return id;
     }
@@ -22,6 +20,7 @@ public class Habito {
         this.id = id;
     }
 
+    // Getter e Setter para descricao
     public String getDescricao() {
         return descricao;
     }
