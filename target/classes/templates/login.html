@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Bem-vindo! Selecione o estilo da página:</h1>
+
+<form action="/login" method="POST">
+    <input type="text" name="email" placeholder="Email" required><br>
+    <input type="password" name="senha" placeholder="Senha" required><br>
+    <input type="hidden" name="pagina" id="pagina" value="">
+    <button type="submit" onclick="document.getElementById('pagina').value='pagBoot';">Página com Framework BootStrap</button>
+    <button type="submit" onclick="document.getElementById('pagina').value='pagPure';">Página com Framework Pure</button>
+</form>
+
+
+<div class="error">
+    <span th:text="${erro}"></span>
+</div>
+
+</body>
+</html>
